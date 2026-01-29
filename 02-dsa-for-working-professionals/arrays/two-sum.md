@@ -102,3 +102,135 @@ console.log(lengthOfLongestSubstring('abcabcbb')); // 3
 - LeetCode: Array tag
 - GeeksforGeeks: Array problems
 - InterviewBit: Array section
+
+1️⃣ UNSORTED ARRAY → HASH MAP
+🟥 Brute Force (O(n²))
+function twoSumBrute(nums, target) {
+    const res = [];
+    for (let i = 0; i < nums.length; i++) {
+        for (let j = i + 1; j < nums.length; j++) {
+            if (nums[i] + nums[j] === target) {
+                res.push([i, j]);
+            }
+        }
+    }
+    return res;
+}
+
+
+⏱️ Time: O(n²)
+📦 Space: O(1)
+
+🟩 Optimized – Hash Map (O(n))
+👉 Return first pair
+function twoSum(nums, target) {
+    const map = new Map();
+
+    for (let i = 0; i < nums.length; i++) {
+        const diff = target - nums[i];
+
+        if (map.has(diff)) {
+            return [map.get(diff), i];
+        }
+        map.set(nums[i], i);
+    }
+}
+
+
+⏱️ Time: O(n)
+📦 Space: O(n)
+
+🟩 Optimized – Hash Map
+👉 Return ALL pairs (indices)
+function twoSumAll(nums, target) {
+    const map = new Map();
+    const res = [];
+
+    for (let i = 0; i < nums.length; i++) {
+        const diff = target - nums[i];
+
+        if (map.has(diff)) {
+            res.push([map.get(diff), i]);
+        }
+        map.set(nums[i], i);
+    }
+    return res;
+}
+
+🔹 2️⃣ SORTED ARRAY → TWO POINTERS
+
+⚠️ Works only if array is sorted
+
+🟥 Brute Force (O(n²))
+function twoSumSortedBrute(nums, target) {
+    const res = [];
+    for (let i = 0; i < nums.length; i++) {
+        for (let j = i + 1; j < nums.length; j++) {
+            if (nums[i] + nums[j] === target) {
+                res.push([i, j]);
+            }
+        }
+    }
+    return res;
+}
+
+🟩 Optimized – Two Pointers (O(n))
+👉 Return one pair
+function twoSumSorted(nums, target) {
+    let left = 0, right = nums.length - 1;
+
+    while (left < right) {
+        const sum = nums[left] + nums[right];
+
+        if (sum === target) return [left, right];
+        if (sum < target) left++;
+        else right--;
+    }
+}
+
+🟩 Optimized – Two Pointers
+👉 Return ALL unique pairs
+function twoSumSortedAll(nums, target) {
+    let left = 0, right = nums.length - 1;
+    const res = [];
+
+    while (left < right) {
+        const sum = nums[left] + nums[right];
+
+        if (sum === target) {
+            res.push([nums[left], nums[right]]);
+            left++;
+            right--;
+
+            while (left < right && nums[left] === nums[left - 1]) left++;
+            while (left < right && nums[right] === nums[right + 1]) right--;
+        }
+        else if (sum < target) left++;
+        else right--;
+    }
+    return res;
+}
+
+🔹 3️⃣ MULTIPLE SOLUTIONS (Return ALL Pairs)
+👉 Unsorted array (values, not indices)
+function twoSumAllValues(nums, target) {
+    const seen = new Set();
+    const res = new Set();
+
+    for (let num of nums) {
+        const diff = target - num;
+
+        if (seen.has(diff)) {
+            res.add([Math.min(num, diff), Math.max(num, diff)].toString());
+        }
+        seen.add(num);
+    }
+    return Array.from(res).map(pair => pair.split(',').map(Number));
+}
+
+🔥 Interview Comparison Table
+Case	Best Approach	Time	Space
+Unsorted (one pair)	Hash Map	O(n)	O(n)
+Unsorted (all pairs)	Hash Map	O(n)	O(n)
+Sorted (one pair)	Two Pointers	O(n)	O(1)
+Sorted (all pairs)	Two Pointers	O(n)	O(1)
